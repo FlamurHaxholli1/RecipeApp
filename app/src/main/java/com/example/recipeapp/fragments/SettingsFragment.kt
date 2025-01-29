@@ -1,53 +1,60 @@
 package com.example.recipeapp.fragments
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Switch
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import com.example.recipeapp.databinding.FragmentSettingsBinding
+import com.example.recipeapp.R
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var binding: FragmentSettingsBinding
+    private lateinit var darkModeSwitch: Switch
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout using ViewBinding
-        binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ): View? {
+        // Inflate the layout for this fragment
+        val binding = inflater.inflate(R.layout.fragment_settings, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // Initialize SharedPreferences
+        sharedPreferences = requireActivity().getSharedPreferences("app_settings", AppCompatActivity.MODE_PRIVATE)
 
-        // Vendos gjendjen aktuale të Switch
-        binding.notificationsSwitch.isChecked = isNotificationsEnabled()
+        // Initialize the dark mode switch
+        darkModeSwitch = binding.findViewById(R.id.darkModeSwitch)
 
-        // Vendos një listener për ndryshimet në Switch
-        binding.notificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
-            setNotificationsEnabled(isChecked)
+        // Set the current state of the dark mode switch based on shared preferences
+        darkModeSwitch.isChecked = sharedPreferences.getBoolean("dark_mode_enabled", false) // Default is light mode
+
+        // Set up the listener for the dark mode toggle
+        darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            setDarkMode(isChecked)
         }
+
+        return binding
     }
 
-    // Funksioni për të ruajtur preferencën për njoftimet
-    private fun setNotificationsEnabled(isEnabled: Boolean) {
-        val sharedPreferences = getSharedPreferences()
-        sharedPreferences.edit().putBoolean("notifications_enabled", isEnabled).apply()
-    }
+    // Store the dark mode preference and apply the theme
+    private fun setDarkMode(isEnabled: Boolean) {
+        // Store the preference in SharedPreferences
+        sharedPreferences.edit().putBoolean("dark_mode_enabled", isEnabled).apply()
 
-    // Funksioni për të marrë preferencën për njoftimet
-    private fun isNotificationsEnabled(): Boolean {
-        val sharedPreferences = getSharedPreferences()
-        return sharedPreferences.getBoolean("notifications_enabled", true) // Vlera e paracaktuar është true
-    }
+        // Apply the theme based on the switch state
+        if (isEnabled) {
+            // Enable dark mode theme
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            // Enable light mode theme
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
-    // Funksioni për të marrë instancën e SharedPreferences
-    private fun getSharedPreferences(): SharedPreferences {
-        return requireContext().getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        // Restart the activity to apply the theme immediately
+        activity?.recreate()
     }
 }

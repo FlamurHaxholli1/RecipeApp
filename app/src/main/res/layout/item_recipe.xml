@@ -15,7 +15,7 @@
         android:text="Recipe Name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginRight="20dp"/>
 
     <!-- ImageView për imazhin e recetës -->
     <ImageView
@@ -26,7 +26,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/recipeName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginRight="20dp"/>
 
     <!-- TextView për përbërësit e recetës -->
     <TextView
@@ -36,7 +36,7 @@
         android:text="Ingredients"
         app:layout_constraintTop_toBottomOf="@id/recipeImage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginRight="20dp"/>
 
     <!-- TextView për udhëzimet e recetës -->
     <TextView
@@ -46,5 +46,5 @@
         android:text="Instructions"
         app:layout_constraintTop_toBottomOf="@id/recipeIngredients"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginRight="20dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
